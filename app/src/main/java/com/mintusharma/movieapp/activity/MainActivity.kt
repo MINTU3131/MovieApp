@@ -2,6 +2,7 @@ package com.mintusharma.movieapp.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -31,24 +32,19 @@ class MainActivity : AppCompatActivity() {
         movieViewModel = ViewModelProvider(this, ViewModelFactory(movieRepository))
             .get(MovieViewModel::class.java)
 
-        movieViewModel.getMovies("YOUR_API_KEY", "SEARCH_TERM")
 
-        movieViewModel.movies.observe(this, Observer {
-
-            val isEndOfList = it.size < MovieViewModel.PAGE_SIZE
-
-            if (isEndOfList && !isLoading) {
-                // Reached the end of the list, trigger loading more movies
-                isLoading = true
-                movieViewModel.loadMoreMovies("YOUR_API_KEY", "SEARCH_TERM")
-            }
-
+        binding.btnSearch.setOnClickListener(View.OnClickListener {
+            movieViewModel.getMovies("b9bd48a6", binding.searchEditText.text.toString())
+            movieViewModel._movies.observe(this, Observer {
+                updateMoviesList(it.toMutableList())
+            })
         })
+
     }
 
-    private fun updateMoviesList(movies: List<Search>) {
+    private fun updateMoviesList(movies: MutableList<Search>) {
         // Clear the previous movies list or handle pagination updates if needed
-        val adapter = binding.movieRecyclerView.adapter as? MovieAdapter
+        var adapter = binding.movieRecyclerView.adapter as? MovieAdapter
         val isPaginationEnabled = adapter != null
 
         if (!isPaginationEnabled) {
@@ -67,13 +63,13 @@ class MainActivity : AppCompatActivity() {
                         && firstVisibleItemPosition >= 0
                     ) {
                         // Reached the end of the list, trigger loading more movies
-                        movieViewModel.loadMoreMovies("YOUR_API_KEY", "SEARCH_TERM")
+                        movieViewModel.loadMoreMovies("b9bd48a6", binding.searchEditText.text.toString())
                     }
                 }
             })
         } else {
             // Pagination update, append new movies to the existing list
-            adapter.addMovies(movies)
+            adapter?.addMovies(movies)
         }
     }
 }

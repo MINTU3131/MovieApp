@@ -10,15 +10,15 @@ import kotlinx.coroutines.launch
 
 class MovieViewModel(private val movieRepository: MovieRepository) : ViewModel() {
 
-    private val _movies = MutableLiveData<List<Search>>()
-    val movies: LiveData<List<Search>> get() = _movies
+    val _movies = MutableLiveData<List<Search>>()
+//    val movies: LiveData<List<Search>> get() = _movies
 
     private var currentPage = 1
 
     fun getMovies(apiKey: String, searchTerm: String) {
         viewModelScope.launch {
             try {
-                val result = movieRepository.getMovieList(apiKey, searchTerm, 1)
+                val result = movieRepository.getMovieList(apiKey, searchTerm, currentPage)
                 currentPage = 1
                 _movies.value = result
             } catch (e: Exception) {

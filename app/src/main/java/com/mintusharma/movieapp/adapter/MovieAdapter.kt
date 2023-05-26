@@ -4,16 +4,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.mintusharma.movieapp.R
+import com.mintusharma.movieapp.databinding.RowItemBinding
 import com.mintusharma.movieapp.models.Search
 
-class MovieAdapter(private val movies: List<Search>) :
+class MovieAdapter(private val movies: MutableList<Search>) :
     RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
-        val itemView = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_movie, parent, false)
-        return MovieViewHolder(itemView)
+        val binding = RowItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return MovieViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
@@ -31,13 +32,13 @@ class MovieAdapter(private val movies: List<Search>) :
         notifyItemRangeInserted(insertPosition, newMovies.size)
     }
 
-    inner class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-//        private val titleTextView: TextView = itemView.findViewById(R.id.titleTextView)
-//        private val yearTextView: TextView = itemView.findViewById(R.id.yearTextView)
+    inner class MovieViewHolder(private val binding: RowItemBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(movie: Search) {
-//            titleTextView.text = movie.title
-//            yearTextView.text = movie.year
+            binding.title.text = movie.Title
+            Glide.with(binding.root.context)
+                .load(movie.Poster)
+                .into(binding.image)
         }
     }
 }
