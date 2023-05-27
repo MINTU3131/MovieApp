@@ -9,7 +9,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import com.mintusharma.movieapp.ApiServices
+import com.mintusharma.movieapp.OnClickListener
 import com.mintusharma.movieapp.RetrofitClient
 import com.mintusharma.movieapp.adapter.MovieAdapter
 import com.mintusharma.movieapp.databinding.ActivityMainBinding
@@ -33,14 +35,23 @@ class MainActivity : AppCompatActivity() {
             .get(MovieViewModel::class.java)
 
         movieViewModel._movies.observe(this, Observer {
+            binding.progressbar.visibility = View.GONE
             updateMoviesList(it)
         })
 
         movieViewModel.errorLiveData.observe(this, Observer { errorMessage ->
-            Toast.makeText(applicationContext, errorMessage, Toast.LENGTH_SHORT).show()
+            binding.progressbar.visibility = View.GONE
+            if (!errorMessage.isNullOrEmpty()) {
+                Snackbar.make(
+                    findViewById(android.R.id.content),
+                    errorMessage,
+                    Snackbar.LENGTH_SHORT
+                ).show()
+            }
         })
 
         binding.btnSearch.setOnClickListener(View.OnClickListener {
+            binding.progressbar.visibility = View.VISIBLE
             movieViewModel.getMovies("b9bd48a6", binding.searchEditText.text.toString(),"Movie",1)
         })
 
@@ -54,7 +65,16 @@ class MainActivity : AppCompatActivity() {
         if (!isPaginationEnabled) {
             val layoutManager = GridLayoutManager(this,2)
             binding.movieRecyclerView.layoutManager = layoutManager
-            adapter = MovieAdapter(movies as ArrayList<Search>)
+            adapter = MovieAdapter(movies as ArrayList<Search>,object : OnClickListener{
+                override fun onItemClickListener(position: Int) {
+                    Snackbar.make(
+                        findViewById(android.R.id.content),
+                        movies.get(position).Title.toString(),
+                        Snackbar.LENGTH_SHORT
+                    ).show()
+                }
+
+            })
             binding.movieRecyclerView.adapter = adapter
             binding.movieRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {

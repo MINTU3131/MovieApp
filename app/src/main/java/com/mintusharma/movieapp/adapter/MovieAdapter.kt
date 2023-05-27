@@ -5,11 +5,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.mintusharma.movieapp.OnClickListener
 import com.mintusharma.movieapp.R
 import com.mintusharma.movieapp.databinding.RowItemBinding
 import com.mintusharma.movieapp.models.Search
 
-class MovieAdapter(private var movies: ArrayList<Search>) :
+class MovieAdapter(private var movies: ArrayList<Search>,private val onClickListener: OnClickListener) :
     RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
@@ -20,6 +21,10 @@ class MovieAdapter(private var movies: ArrayList<Search>) :
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
         val movie = movies[position]
         holder.bind(movie)
+
+        holder.itemView.setOnClickListener(View.OnClickListener {
+            onClickListener.onItemClickListener(position)
+        })
     }
 
     override fun getItemCount(): Int {
