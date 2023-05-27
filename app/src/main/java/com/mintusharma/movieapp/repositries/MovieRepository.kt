@@ -7,18 +7,14 @@ import kotlinx.coroutines.withContext
 
 class MovieRepository(private val apiServices: ApiServices) {
 
-    suspend fun getMovieList(
-        apiKey: String,
-        searchTerm: String,
-        page: Int,
-    ): List<Search> {
+    suspend fun getMovieList(apiKey: String, searchTerm: String, type: String, page: Int, ): ArrayList<Search> {
         return withContext(Dispatchers.IO) {
-            val response = apiServices.getMovies(apiKey, searchTerm, page)
-            if (response.isSuccessful) {
-                return@withContext response.body()?.Search ?: emptyList()
+            val response = apiServices.getMovies(apiKey, searchTerm, type ,page)
+            (if (response.Response == "True") {
+                response.Search
             } else {
-                throw Exception("Failed to fetch movies")
-            }
+                null
+            })!!
         }
     }
 

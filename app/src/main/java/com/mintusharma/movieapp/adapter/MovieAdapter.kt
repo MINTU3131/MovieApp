@@ -9,7 +9,7 @@ import com.mintusharma.movieapp.R
 import com.mintusharma.movieapp.databinding.RowItemBinding
 import com.mintusharma.movieapp.models.Search
 
-class MovieAdapter(private val movies: MutableList<Search>) :
+class MovieAdapter(private var movies: ArrayList<Search>) :
     RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
@@ -26,7 +26,7 @@ class MovieAdapter(private val movies: MutableList<Search>) :
         return movies.size
     }
 
-    fun addMovies(newMovies: List<Search>) {
+    fun addMovies(newMovies: ArrayList<Search>) {
         val insertPosition = movies.size
         movies.addAll(newMovies)
         notifyItemRangeInserted(insertPosition, newMovies.size)
