@@ -12,6 +12,7 @@ class MovieViewModel(private val movieRepository: MovieRepository) : ViewModel()
 
     val _movies = MutableLiveData<ArrayList<Search>>()
     val errorLiveData = MutableLiveData<String>()
+    lateinit var searchTerm1: String
 
     private var currentPage = 1
 

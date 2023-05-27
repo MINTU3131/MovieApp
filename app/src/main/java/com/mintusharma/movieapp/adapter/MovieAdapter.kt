@@ -31,6 +31,11 @@ class MovieAdapter(private var movies: ArrayList<Search>,private val onClickList
         return movies.size
     }
 
+    fun clearMovies() {
+        movies.clear()
+        notifyDataSetChanged()
+    }
+
     fun addMovies(newMovies: ArrayList<Search>) {
         val insertPosition = movies.size
         movies.addAll(newMovies)

@@ -24,6 +24,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var movieViewModel: MovieViewModel
     private lateinit var binding: ActivityMainBinding
+    var searchTerm1: String =""
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -91,6 +93,10 @@ class MainActivity : AppCompatActivity() {
             })
         }
     else {
+        if (!searchTerm1.equals( binding.searchEditText.text.toString())){
+            adapter?.clearMovies()
+            searchTerm1 =  binding.searchEditText.text.toString()
+        }
             adapter?.addMovies(movies as ArrayList<Search>)
         }
     }
